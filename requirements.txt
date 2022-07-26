@@ -1,0 +1,6 @@
+aiogram
+httplib2
+apiclient
+oauth2client
+pygsheets
+loguru
