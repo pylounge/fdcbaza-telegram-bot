@@ -6,8 +6,8 @@ class GoogleTable:
     def __init__(
         self, credence_service_file: str = "", googlesheet_file_url: str = ""
     ) -> None:
-        self.credence_service_file = credence_service_file
-        self.googlesheet_file_url = googlesheet_file_url
+        self.credence_service_file: str = credence_service_file
+        self.googlesheet_file_url: str = googlesheet_file_url
 
     def _get_googlesheet_by_url(
         self, googlesheet_client: pygsheets.client.Client
