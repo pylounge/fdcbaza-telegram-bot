@@ -1,4 +1,5 @@
 import pygsheets
+from pygsheets.client import Client
 from typing import List, Union
 
 class GoogleTable:
@@ -17,7 +18,7 @@ class GoogleTable:
         )
         return sheets.sheet1
 
-    def _get_googlesheet_client(self):
+    def _get_googlesheet_client(self) -> Client:
         """It is authorized using the service key and returns the Google Docs client object"""
         return pygsheets.authorize(
             service_file=self.credence_service_file

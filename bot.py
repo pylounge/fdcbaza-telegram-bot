@@ -1,4 +1,5 @@
 import config
+import datetime
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher, filters
 from aiogram.utils import executor
@@ -23,7 +24,7 @@ class FreakTelegramBot(Bot):
         super().__init__(token, parse_mode=parse_mode)
         self._google_table: GoogleTable = google_table
 
-bot: FreakTelegramBot = FreakTelegramBot(
+bot = FreakTelegramBot(
     token=config.settings["TOKEN"],
     parse_mode=types.ParseMode.HTML,
     google_table=GoogleTable("creds.json",
@@ -39,23 +40,23 @@ async def abonement_handler(message_from: types.Message) -> None:
   command, number = text_msg.lower().split(' ')
   print(f"Вход: команда '{command}', опция '{number}'")
 
-  values = bot._google_table.search_abonement(number)
+  values: int = bot._google_table.search_abonement(number)
 
   if values == -1:
     message = f'Такого абонемента не существует, либо его срок действия закончился 😰'
   else:
-    end_date_value = values[0]
-    balance_value = int(values[1])
-    last_digit = balance_value % 10
+    end_date_value: datetime = values[0]
+    balance_value: int = int(values[1])
+    last_digit: int = balance_value % 10
 
     if last_digit == 1 and balance_value != 11:
-      balance_value = f'{balance_value} занятие'
+      balance_value: str = f'{balance_value} занятие'
     elif last_digit in (2, 3, 4) and balance_value not in (12, 13, 14):
-      balance_value = f'{balance_value} занятия'
+      balance_value: str = f'{balance_value} занятия'
     else:
-      balance_value = f'{balance_value} занятий'
+      balance_value: str = f'{balance_value} занятий'
 
-    message = f'🗓 Ваш абонемент заканчивается {end_date_value}\n💃 У Вас осталось {balance_value}'
+    message:str = f'🗓 Ваш абонемент заканчивается {end_date_value}\n💃 У Вас осталось {balance_value}'
 
   try:
       await message_from.reply(message)
@@ -67,10 +68,10 @@ async def abonement_handler(message_from: types.Message) -> None:
 async def bot_commands_handler(message_from: types.Message) -> None:
   user_id: str = str(message_from.from_id)
   text_msg: str = message_from.md_text.strip(" @#")
-  command = text_msg.lower()
+  command: str = text_msg.lower()
   print(f"Вход: команда '{command}'")
 
-  message = (
+  message: str = (
     f"🤖 КОМАНДЫ ДЛЯ ЧАТ-БОТА: 🤖\n\n"
     f"❗ Бот ❗\n"
     f"-- все доступные команды чат-бота 📣\n\n"
@@ -97,9 +98,8 @@ async def bot_commands_handler(message_from: types.Message) -> None:
 async def prices_handler(message_from: types.Message) -> None:
   user_id: str = str(message_from.from_id)
   text_msg: str = message_from.md_text.strip(" @#")
-  command = text_msg.lower()
+  command: str = text_msg.lower()
   print(f"Вход: команда '{command}'")
-
   try:
       with open('res/price.jpg', 'rb') as photo:
         await bot.send_photo(user_id, photo)
@@ -111,9 +111,8 @@ async def prices_handler(message_from: types.Message) -> None:
 async def schedule_adults_handler(message_from: types.Message) -> None:
   user_id: str = str(message_from.from_id)
   text_msg: str = message_from.md_text.strip(" @#")
-  command = text_msg.lower()
+  command:str = text_msg.lower()
   print(f"Вход: команда '{command}'")
-
   try:
     with open('res/timetable.jpg', 'rb') as photo:
         await bot.send_photo(user_id, photo)
@@ -121,6 +120,5 @@ async def schedule_adults_handler(message_from: types.Message) -> None:
     logger.debug(f"{send_error.message}: Trouble id: {user_id}")
     return
     
-
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
