@@ -4,3 +4,4 @@ apiclient
 oauth2client
 pygsheets
 loguru
+python-dotenv==1.0.0
